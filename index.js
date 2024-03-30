@@ -1,15 +1,15 @@
 const buttons = document.querySelectorAll(".btn-primary");
 const basketCount = document.querySelector(".count");
-
+let products = []
 
 buttons.forEach(button => {
     button.onclick = function (ev) {
         ev.preventDefault();
-        let products;
+
         let productId = this.parentElement.getAttribute("data-id");
 
         if (localStorage.getItem("basket") == null) {
-           localStorage.setItem("basket",JSON.stringify([]));
+            localStorage.setItem("basket", JSON.stringify(products));
         } else {
             products = JSON.parse(localStorage.getItem("basket"));
         }
@@ -19,27 +19,17 @@ buttons.forEach(button => {
         if (existProduct) {
             existProduct.count++;
         } else {
-            let product = {
-
+            products.push({
                 id: productId,
                 name: this.parentElement.firstElementChild.innerText,
                 desc: this.previousElementSibling.previousElementSibling.innerText,
                 price: this.previousElementSibling.innerText.split("$")[0],
-                count:1,
-                image:this.parentElement.previousElementSibling.getAttribute("src"),
-               
-
-
-            }
-            products.push(product)
-
+                count: 1,
+                image: this.parentElement.previousElementSibling.getAttribute("src"),
+            })
         }
-
         localStorage.setItem("basket", JSON.stringify(products))
-
         calculateBasketCount();
-
-
     }
 });
 
@@ -50,6 +40,5 @@ function calculateBasketCount() {
         length = JSON.parse(basket).length;
         basketCount.innerText = length;
     }
-
 }
 calculateBasketCount();
